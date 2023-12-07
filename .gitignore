@@ -1,0 +1,9 @@
+/all-ocr
+/NewOCR
+/OCR-text
+/test
+/test2
+*.png
+*.jpg
+*.JPG
+*.txt
