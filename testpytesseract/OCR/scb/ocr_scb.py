@@ -34,11 +34,11 @@ for filename in os.listdir(directory_folder_source):
         # Append the OCR result to the list
         ocr_result.append(new_res)
 
-        # # Save OCR result to text file
-        # output_file_path = os.path.join(output_folder_ocr_text, f'ocr_result_{filename}.txt')
-        # with open(output_file_path, 'w', encoding='utf-8') as file:
-        #     file.write(f"{new_res}")
-        #     print(f"OCR result saved to: {output_file_path}")
+        # Save OCR result to text file
+        output_file_path = os.path.join(output_folder_ocr_text, f'ocr_result_{filename}.txt')
+        with open(output_file_path, 'w', encoding='utf-8') as file:
+            file.write(f"{new_res}")
+            print(f"OCR result saved to: {output_file_path}")
 
 with open('testpytesseract\OCR\scb\ocr.txt', 'w', encoding='utf-8') as file:
     for i, result in enumerate(ocr_result):

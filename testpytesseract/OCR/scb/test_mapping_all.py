@@ -40,7 +40,7 @@ for filename in os.listdir(folder_path):
             lines = file.readlines()
             list_data = [line.strip() for line in lines if line.strip()]
 
-        pattern_account_number = re.compile(r'^[×xX\d—-]+$')
+        pattern_account_number = re.compile(r'^[×xX%\d—-]+$')
         recipient_account = ''
         recipient_name = ''
         memo = ''
@@ -49,7 +49,7 @@ for filename in os.listdir(folder_path):
         for idx,data  in enumerate(list_data):
 
             # map date time
-            if data.startswith('@') and (levenshteinDistance(data[-6:], 'สำเร็จ') < 5) and levels == 0:
+            if (data.startswith('@') or (levenshteinDistance(data[-6:], 'สำเร็จ') < 5) or (data == '@โอนเงินสำเร็จ') ) and levels == 0:
                 date_match = re.search(r'(.*)-', list_data[idx+1])
                 if date_match:
                     date = date_match.group(1)
@@ -75,19 +75,28 @@ for filename in os.listdir(folder_path):
                     
                 levels += 1
 
-            if pattern_account_number.match(data) and recipient_name != "":
-                recipient_account = list_data[idx]
-
             if pattern_account_number.match(data) and levels == 2:
                 words_to_remove = ["ไปยัง","@"]
-                recipient_name = remove_word_from_string(list_data[idx + 1], words_to_remove)
+                recipient_name = remove_word_from_string(list_data[idx+1], words_to_remove)
                 levels += 1
 
+            if pattern_account_number.match(data) and recipient_name != "":
+                if list_data[idx] == owner_account:
+                    recipient_account = ""
+                else:
+                    recipient_account = list_data[idx]
+
             if levels == 3:
-                amount = re.search(r'[0-9,]+\.[0-9]{2}', data)
-                if amount != None:
-                    amount = amount.group(0)
-                    levels += 1
+                amount_line = re.search(r'[0-9,]+\.[0-9]{2}', data)
+                if amount_line is not None:
+                    # Extract the portion starting with the digits
+                    amount = re.search(r'\d.*\d', list_data[idx])
+                    if amount is not None:
+                        amount = amount.group(0)
+                        print(amount)
+                        levels += 1
+                else:
+                    amount = ""
             
             if levels == 4:
                 if data.startswith('บันทึกช่วยจำ') or levenshteinDistance(data[:12], 'บันทึกช่วยจำ') < 5:
