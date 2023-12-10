@@ -44,26 +44,26 @@ with open(os.path.join(text_files), 'r', encoding='utf-8') as file:
     list_data.extend([line.strip() for line in lines if line.strip()])
 print(list_data)
 
-pattern_account_number = re.compile(r'^[×xX\d—-]+$')
+pattern_account_number = re.compile(r'^[×xX%\d—-]+$')
 
 levels = 0
 
 for idx,data  in enumerate(list_data):
 
     # map date time
-    if data.startswith('@') and (levenshteinDistance(data[-6:], 'สำเร็จ') < 5) and levels == 0:
-        date_match = re.search(r'(.*)-', list_data[idx+1])
-        if date_match:
-            date = date_match.group(1)
-        else:
-                date = ""
-        # Use regex to extract string after '-'
-        time_match = re.search(r'-(.*)', list_data[idx + 1])
-        if time_match:
-            time= time_match.group(1)
-        else:
-                time = ""
-        levels += 1
+    if (data.startswith('@') or (levenshteinDistance(data[-6:], 'สำเร็จ') < 5) or (data == '@โอนเงินสำเร็จ') ) and levels == 0:
+                date_match = re.search(r'(.*)-', list_data[idx+1])
+                if date_match:
+                    date = date_match.group(1)
+                else:
+                        date = ""
+                # Use regex to extract string after '-'
+                time_match = re.search(r'-(.*)', list_data[idx + 1])
+                if time_match:
+                    time= time_match.group(1)
+                else:
+                        time = ""
+                levels += 1
 
     # map name , account owner
     if (data.startswith('รหัสอ้างอิง') or levenshteinDistance(data[:12], 'รหัสอ้างอิง') < 5) and levels == 1:
