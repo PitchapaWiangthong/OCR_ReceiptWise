@@ -43,7 +43,9 @@ for filename in os.listdir(folder_path):
         pattern_account_number = re.compile(r'^[×xX%\d—-]+$')
         recipient_account = ''
         recipient_name = ''
+        recipient_bank = ''
         owner_account = ''
+        owner_bank = ''
         amount = ''
         memo = ''
         levels = 0
@@ -57,8 +59,8 @@ for filename in os.listdir(folder_path):
                 time = time_match.group(0)
 
                 levels += 1
-
             if (data == 'กรุงไทย' or levenshteinDistance(data, 'กรุงไทย') < 5):
+                owner_bank = data
                 if len(list_data[idx - 1]) > 6:
                     owner_name = list_data[idx - 1]
                 else:
@@ -72,12 +74,16 @@ for filename in os.listdir(folder_path):
                     if levenshteinDistance(list_data[idx + 1][-6:],'สำเร็จ') < 5:
                         if len(list_data[idx + 3]) < 6:
                             recipient_name = list_data[idx + 4]
+                            recipient_bank = list_data[idx + 5]
                         else:
                             recipient_name = list_data[idx + 3]
+                            recipient_bank = list_data[idx + 4]
                     else:
                         recipient_name = list_data[idx + 1]
+                        recipient_bank = list_data[idx + 2]
                 else:
                     recipient_name = list_data[idx + 2]
+                    recipient_bank = list_data[idx + 3]
 
                 levels += 1
                 continue

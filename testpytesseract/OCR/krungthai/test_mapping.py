@@ -5,7 +5,7 @@ import re
 text_files_directory = r"testpytesseract\OCR\krungthai\ocr_text"
 
 list_data = []
-pattern_account_number = re.compile(r'^[×xX\d—-]+$')
+pattern_account_number = re.compile(r'^[×xX%\d—-]+$')
 
 
 # levenshteinDistance
